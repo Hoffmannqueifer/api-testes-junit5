@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +25,9 @@ import com.dicasdeumdev.api.services.exceptions.ObjectNotFoundException;
 @SpringBootTest
 class UserServiceImplTest {
 
-    public static final int ID = 1;
+    private static final int INDEX = 0;
+	private static final String USUÁRIO_NÃO_ENCONTRADO = "Usuário não encontrado";
+	public static final int ID = 1;
     public static final String NAME = "hoff";
     public static final String EMAIL = "hoff@gmail.com";
     public static final String PASSWORD = "1122";
@@ -63,18 +66,28 @@ class UserServiceImplTest {
     
     @Test
     void whenFindByIdThenReturnAnObjecttNotFoundException() {
-    	when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Usuário não encontrado"));
+    	when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(USUÁRIO_NÃO_ENCONTRADO));
     	
     	try {
     		service.findById(ID);
     	}catch(Exception ex) {
     		assertEquals(ObjectNotFoundException.class, ex.getClass());
-    		assertEquals("Usuário não encontrado", ex.getMessage());
+    		assertEquals(USUÁRIO_NÃO_ENCONTRADO, ex.getMessage());
     	}
     }
 
     @Test
-    void findAll() {
+    void whenfindAllThenReturnAnListOfUsers() {
+    	when(repository.findAll()).thenReturn(List.of(user));
+    	List<User> response = service.findAll();
+    	
+    	Assertions.assertNotNull(response);
+    	Assertions.assertEquals(1, response.size());
+    	Assertions.assertEquals(User.class, response.get(INDEX).getClass());
+    	Assertions.assertEquals(ID, response.get(INDEX).getId());
+    	Assertions.assertEquals(NAME, response.get(INDEX).getName());
+    	Assertions.assertEquals(EMAIL, response.get(INDEX).getEmail());
+    	Assertions.assertEquals(PASSWORD, response.get(INDEX).getPassword());
     }
 
     @Test
