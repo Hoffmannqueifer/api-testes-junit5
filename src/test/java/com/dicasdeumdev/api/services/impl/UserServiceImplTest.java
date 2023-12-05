@@ -2,6 +2,7 @@ package com.dicasdeumdev.api.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -145,7 +146,24 @@ class UserServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void deleteWithSucess() {
+    	when(repository.findById(anyInt())).thenReturn(optionalUser);
+    	Mockito.doNothing().when(repository).deleteById(anyInt());
+    	
+    	service.delete(ID);
+    	verify(repository, Mockito.times(1)).deleteById(anyInt());
+    	
+    }
+    
+    @Test
+    void deleteWithObjectNotFoundException() {
+    	when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException(USUÁRIO_NÃO_ENCONTRADO));
+    	try {
+    		service.delete(ID);
+    	}catch(Exception ex) {
+    		Assertions.assertEquals(ObjectNotFoundException.class, ex.getClass());
+    		Assertions.assertEquals(USUÁRIO_NÃO_ENCONTRADO, ex.getMessage());
+    	}
     }
 
     private void startUser(){
