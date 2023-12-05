@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.dicasdeumdev.api.domain.User;
 import com.dicasdeumdev.api.domain.dto.UserDTO;
 import com.dicasdeumdev.api.repositories.UserRepository;
+import com.dicasdeumdev.api.services.exceptions.DataIntegratyViolationException;
 import com.dicasdeumdev.api.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
@@ -91,7 +92,28 @@ class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSucess() {
+    	when(repository.save(Mockito.any())).thenReturn(user);
+    	
+    	User response = service.create(userDTO);
+    	Assertions.assertNotNull(response);
+    	Assertions.assertEquals(ID, response.getId());
+    	Assertions.assertEquals(NAME, response.getName());
+    	Assertions.assertEquals(EMAIL, response.getEmail());
+    	Assertions.assertEquals(PASSWORD, response.getPassword());
+    }
+    
+    @Test
+    void whenCreateThenReturnDataIntegrityViolationException() {
+    	when(repository.findByEmail(Mockito.anyString())).thenReturn(optionalUser);
+    	
+    	try {
+    		optionalUser.get().setId(2);
+    		service.create(userDTO);
+    	}catch(Exception ex) {
+    		Assertions.assertEquals(DataIntegratyViolationException.class, ex.getClass());
+    		Assertions.assertEquals("E-mail já cadastrado no sistema", ex.getMessage());
+    	}
     }
 
     @Test
