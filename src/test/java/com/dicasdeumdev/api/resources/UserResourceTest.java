@@ -24,16 +24,14 @@ import com.dicasdeumdev.api.services.impl.UserServiceImpl;
 @SpringBootTest
 public class UserResourceTest {
 	
-	private static final String E_MAIL_JA_CADASTRADO_NO_SISTEMA = "E-mail já cadastrado no sistema";
 	private static final int INDEX = 0;
-	private static final String USUÁRIO_NÃO_ENCONTRADO = "Usuário não encontrado";
 	public static final int ID = 1;
     public static final String NAME = "hoff";
     public static final String EMAIL = "hoff@gmail.com";
     public static final String PASSWORD = "1122";
     
-    private User user;
-    private UserDTO userDTO;
+    private User user = new User();
+    private UserDTO userDTO = new UserDTO();
 
 	@InjectMocks
 	private UserResource resource;

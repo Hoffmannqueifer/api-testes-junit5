@@ -14,9 +14,9 @@ public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     
-    
-	public UserDTO() {
-	}
+    public UserDTO() {
+    	
+    }
 
 	public UserDTO(Integer id, String name, String email, String password) {
 		this.id = id;
@@ -60,18 +60,6 @@ public class UserDTO {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserDTO other = (UserDTO) obj;
-		return Objects.equals(id, other.id);
 	}
     
 }
