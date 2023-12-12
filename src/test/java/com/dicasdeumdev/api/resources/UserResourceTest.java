@@ -1,5 +1,7 @@
 package com.dicasdeumdev.api.resources;
 
+import static org.mockito.Mockito.times;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,5 +121,17 @@ public class UserResourceTest {
         Assertions.assertEquals(NAME, response.getBody().getName());
         Assertions.assertEquals(EMAIL, response.getBody().getEmail());
         
+	}
+	
+	@Test
+	void whenDeleteThenReturnSucess() {
+		Mockito.doNothing().when(service).delete(Mockito.anyInt());
+		
+		ResponseEntity<UserDTO> response = resource.delete(ID);
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(ResponseEntity.class, response.getClass());
+		Mockito.verify(service, times(1)).delete(Mockito.anyInt());
+		Assertions.assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		
 	}
 }
